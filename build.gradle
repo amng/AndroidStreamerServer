@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+    }
+}
+plugins {
+    id "org.hibernate.gradle.tools" version "1.2.3"
+}
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+configurations {
+    providedRuntime
+}
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'streamer'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-tomcat")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('com.jayway.jsonpath:json-path')
+    compile(name:'swing-material', ext:'jar')
+    compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
+    compile 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
+    compile 'org.apache.tika:tika-core:1.13'
+}
+// Include dependent libraries in archive.
+jar {
+    baseName = 'Streamer'
+    manifest {
+        attributes "Main-Class": "hello.Application"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
